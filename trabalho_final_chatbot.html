@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot - Ataque dos Titãs</title>
+    <style>
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #1e1e1e, #4b4b4b);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url('https://i.ytimg.com/vi/7-6chD5IGIs/maxresdefault.jpg'); 
+            background-size: cover;
+            background-position: center;
+        }
+
+        
+        #chatbot {
+            width: 100%;
+            max-width: 450px;
+            height: 600px;
+            border: 2px solid #8b0000;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.8); 
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+        }
+
+        
+        #chatbot-header {
+            background-color: #8b0000;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        
+        #messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #messages .message {
+            padding: 12px;
+            border-radius: 10px;
+            max-width: 75%;
+        }
+
+        #messages .user {
+            background: #007bff;
+            color: white;
+            align-self: flex-end;
+        }
+
+        #messages .bot {
+            background: #333;
+            color: white;
+            align-self: flex-start;
+        }
+
+        
+        #input-area {
+            display: flex;
+            border-top: 1px solid #555;
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            color: white;
+            background: #222;
+        }
+
+        #send-btn {
+            padding: 12px 20px;
+            border: none;
+            background: #8b0000;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        #send-btn:hover {
+            background: #a83232;
+        }
+
+       
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #8b0000;
+            border-radius: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #222;
+        }
+    </style>
+</head>
+<body>
+    <div id="chatbot">
+        <div id="chatbot-header">Shingeki no Kyojin Chatbot</div>
+        <div id="messages"></div>
+        <div id="input-area">
+            <input type="text" id="user-input" placeholder="Pergunte sobre Ataque dos Titãs...">
+            <button id="send-btn">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+        const messages = document.getElementById('messages');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+
+        sendBtn.addEventListener('click', async () => {
+            const userMessage = userInput.value.trim();
+            if (!userMessage) return;
+
+            addMessage(userMessage, 'user');
+            userInput.value = '';
+
+            const botResponse = await getBotResponse(userMessage);
+            addMessage(botResponse, 'bot');
+        });
+
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender);
+            messageDiv.textContent = text;
+            messages.appendChild(messageDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        async function getBotResponse(userMessage) {
+            const intentResponses = {
+                "oi": "Olá! Como posso ajudar?",
+                "olá": "Oi! Pergunte-me sobre Shingeki no Kyojin!",
+                "tudo bem?": "Estou ótimo! Pronto para responder suas perguntas sobre Ataque dos Titãs.",
+                "oie": "Oi! Tudo bem? O que você gostaria de saber sobre Ataque dos Titãs?",
+                "oii": "Oi! Estou aqui para ajudar com informações sobre Shingeki no Kyojin!",
+                "oiii": "Oi! Estou aqui para ajudar com informações sobre Shingeki no Kyojin!",
+                "quem é eren yeager": "Eren Yeager é o protagonista de Ataque dos Titãs. Ele possui o poder do Titã de Ataque e busca liberdade para a humanidade.",
+                "quem é mikasa ackerman": "Mikasa Ackerman é uma lutadora habilidosa e amiga de infância de Eren. Ela faz parte do esquadrão de exploração.",
+                "o que é ataque dos titãs":"Ataque dos Titãs é um anime e mangá criado por Hajime Isayama. A história retrata a luta da humanidade contra Titãs gigantes que ameaçam sua existência.",
+                "quantos episódios tem": "O anime possui 87 episódios divididos em 4 temporadas.",
+                "quantos volumes tem": "O mangá tem 34 volumes no total.",
+                "quem é eren": "Eren Yeager é o protagonista. Ele busca liberdade para a humanidade e possui o poder de se transformar no Titã de Ataque.",
+                "quem é mikasa": "Mikasa Ackerman é a amiga de infância de Eren. Uma lutadora habilidosa, ela é extremamente protetora em relação a ele.",
+                "quais são os titãs":"Os Titãs Primordiais são: Titã de Ataque, Titã Colossal, Titã Encouraçado, Titã Fêmea, Titã Bestial, Titã Mandíbula, Titã Carruagem, Titã Martelo de Guerra e Titã Fundador.",
+                "o que é ataque dos titãs":"Ataque dos Titãs é um anime e mangá criado por Hajime Isayama. A história retrata a luta da humanidade contra Titãs gigantes que ameaçam sua existência.",
+                "quantos episódios tem": "O anime possui 87 episódios divididos em 4 temporadas.",
+                "quantos volumes tem": "O mangá tem 34 volumes no total.",
+                "quem é eren": "Eren Yeager é o protagonista. Ele busca liberdade para a humanidade e possui o poder de se transformar no Titã de Ataque.",
+                "quem é mikasa": "Mikasa Ackerman é a amiga de infância de Eren. Uma lutadora habilidosa, ela é extremamente protetora em relação a ele.",
+                "quem é armin": "Armin Arlert é o melhor amigo de Eren. Ele é um estrategista brilhante e eventualmente se torna o portador do Titã Colossal.",
+                "quem é levi":"Levi Ackerman é o capitão da Tropa de Exploração. Conhecido como o soldado mais forte da humanidade, ele é altamente habilidoso e disciplinado.",
+                "quais são os titãs": "Os Titãs Primordiais são: Titã de Ataque, Titã Colossal, Titã Encouraçado, Titã Fêmea, Titã Bestial, Titã Mandíbula, Titã Carruagem, Titã Martelo de Guerra e Titã Fundador.",
+                "quem são os portadores dos titãs": "Eren Yeager: Titã de Ataque, Titã Fundador, Titã Martelo de Guerra. Reiner Braun: Titã Encouraçado. Annie Leonhart: Titã Fêmea. Zeke Yeager: Titã Bestial.",
+                "quais são as nações": "As principais nações são Eldia e Marley. Eldia é a terra original dos Titãs, enquanto Marley utiliza os Titãs como armas para dominar o mundo.",
+                "qual é a história principal": "A história acompanha Eren Yeager e seus amigos enquanto lutam para sobreviver em um mundo devastado por Titãs. Ao longo do tempo, eles descobrem segredos sobre a origem dos Titãs e os conflitos entre as nações Eldia e Marley.",
+                "oi":"Olá! Como posso te ajudar com Ataque dos Titãs?",
+                "olá":"Olá! Como posso te ajudar com Ataque dos Titãs?",
+                "e aí": "Olá! Como posso te ajudar com Ataque dos Titãs?",
+                "oie tudo bem?": "Olá! Como posso te ajudar com Ataque dos Titãs?",
+                "adeus":"Tchau! Volte sempre para saber mais sobre Shingeki no Kyojin.",
+                "tchau": "Tchau! Volte sempre para saber mais sobre Shingeki no Kyojin.",
+                "quantos episódios tem": "O anime tem 87 episódios, divididos em 4 temporadas.",
+                "quantos volumes tem o mangá": "O mangá de Ataque dos Titãs possui 34 volumes.",
+                "quais são os titãs": "Os Titãs Primordiais são: Titã de Ataque, Titã Colossal, Titã Encouraçado, Titã Fêmea, Titã Bestial, Titã Mandíbula, Titã Carruagem, Titã Martelo de Guerra e Titã Fundador.",    
+                "adeus": "Tchau! Volte sempre para mais informações sobre Shingeki no Kyojin.",
+                "tchau": "Até logo!",
+                "quem é eren yeager?": "Eren Yeager é o protagonista de Ataque dos Titãs. Ele possui o poder do Titã de Ataque e busca liberdade para a humanidade.",
+                "quem é mikasa ackerman?": "Mikasa Ackerman é uma lutadora habilidosa e amiga de infância de Eren. Ela faz parte do esquadrão de exploração.",
+                "o que é ataque dos titãs?":"Ataque dos Titãs é um anime e mangá criado por Hajime Isayama. A história retrata a luta da humanidade contra Titãs gigantes que ameaçam sua existência.",
+                "quantos episódios tem?": "O anime possui 87 episódios divididos em 4 temporadas.",
+                "quantos volumes tem?": "O mangá tem 34 volumes no total.",
+                "quem é eren?": "Eren Yeager é o protagonista. Ele busca liberdade para a humanidade e possui o poder de se transformar no Titã de Ataque.",
+                "quem é mikasa?": "Mikasa Ackerman é a amiga de infância de Eren. Uma lutadora habilidosa, ela é extremamente protetora em relação a ele.",
+                "quais são os titãs?":"Os Titãs Primordiais são: Titã de Ataque, Titã Colossal, Titã Encouraçado, Titã Fêmea, Titã Bestial, Titã Mandíbula, Titã Carruagem, Titã Martelo de Guerra e Titã Fundador.",
+                "o que é ataque dos titãs?":"Ataque dos Titãs é um anime e mangá criado por Hajime Isayama. A história retrata a luta da humanidade contra Titãs gigantes que ameaçam sua existência.",
+                "quantos episódios tem?": "O anime possui 87 episódios divididos em 4 temporadas.",
+                "quantos volumes tem?": "O mangá tem 34 volumes no total.",
+                "quem é eren?": "Eren Yeager é o protagonista. Ele busca liberdade para a humanidade e possui o poder de se transformar no Titã de Ataque.",
+                "quem é mikasa?": "Mikasa Ackerman é a amiga de infância de Eren. Uma lutadora habilidosa, ela é extremamente protetora em relação a ele.",
+                "quem é armin?": "Armin Arlert é o melhor amigo de Eren. Ele é um estrategista brilhante e eventualmente se torna o portador do Titã Colossal.",
+                "quem é levi?":"Levi Ackerman é o capitão da Tropa de Exploração. Conhecido como o soldado mais forte da humanidade, ele é altamente habilidoso e disciplinado.",
+                "quais são os titãs?": "Os Titãs Primordiais são: Titã de Ataque, Titã Colossal, Titã Encouraçado, Titã Fêmea, Titã Bestial, Titã Mandíbula, Titã Carruagem, Titã Martelo de Guerra e Titã Fundador.",
+                "quem são os portadores dos titãs?": "Eren Yeager: Titã de Ataque, Titã Fundador, Titã Martelo de Guerra. Reiner Braun: Titã Encouraçado. Annie Leonhart: Titã Fêmea. Zeke Yeager: Titã Bestial.",
+                "quais são as nações?": "As principais nações são Eldia e Marley. Eldia é a terra original dos Titãs, enquanto Marley utiliza os Titãs como armas para dominar o mundo.",
+                "qual é a história principal?": "A história acompanha Eren Yeager e seus amigos enquanto lutam para sobreviver em um mundo devastado por Titãs. Ao longo do tempo, eles descobrem segredos sobre a origem dos Titãs e os conflitos entre as nações Eldia e Marley.",
+            }
+
+            const normalizedMessage = userMessage.toLowerCase();
+            return intentResponses[normalizedMessage] || "Desculpe, não entendi sua pergunta. Tente perguntar de outra forma!";
+        }
+    </script>
+</body>
+</html>
